@@ -12,7 +12,7 @@ interface Pokemon {
   image: string;
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const resp = await fetch(`https://edvinas-buck.s3.amazonaws.com/index.json`);
 
   return {
@@ -24,7 +24,7 @@ export async function getServerSideProps() {
 
 export default function Home({
   pokemon,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getStaticProps>) {
   return (
     <div className={styles.container}>
       <Head>

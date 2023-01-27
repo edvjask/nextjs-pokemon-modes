@@ -12,9 +12,25 @@ type Pokemon = {
   image: string;
 };
 
-export async function getServerSideProps({
-  params,
-}: GetServerSidePropsContext) {
+interface PokemonGeneral {
+  id: number;
+  name: string;
+  image: string;
+}
+
+export async function getStaticPaths() {
+  const resp = await fetch(`https://edvinas-buck.s3.amazonaws.com/index.json`);
+  const pokemon = (await resp.json()) as PokemonGeneral[];
+
+  return {
+    paths: pokemon.map((pokemon) => ({
+      params: { id: pokemon.id.toString() },
+    })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }: GetServerSidePropsContext) {
   const resp = await fetch(
     `https://edvinas-buck.s3.amazonaws.com/pokemon/${params?.id}.json`
   );
