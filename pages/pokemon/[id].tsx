@@ -21,7 +21,7 @@ export async function getServerSideProps({
 
   return {
     props: {
-      pokemon: await resp.json(),
+      pokemon: (await resp.json()) as Pokemon,
     },
   };
 }
