@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from '../../styles/Details.module.css';
 
 type Pokemon = {
@@ -12,29 +12,23 @@ type Pokemon = {
   image: string;
 };
 
-export default function Details() {
-  const {
-    query: { id },
-  } = useRouter();
+export async function getServerSideProps({
+  params,
+}: GetServerSidePropsContext) {
+  const resp = await fetch(
+    `https://edvinas-buck.s3.amazonaws.com/pokemon/${params?.id}.json`
+  );
 
-  const [pokemon, setPokemon] = useState<Pokemon>();
+  return {
+    props: {
+      pokemon: await resp.json(),
+    },
+  };
+}
 
-  useEffect(() => {
-    async function getPokemon() {
-      const resp = await fetch(
-        `https://edvinas-buck.s3.amazonaws.com/pokemon/${id}.json`
-      );
-      setPokemon(await resp.json());
-    }
-    if (id) {
-      getPokemon();
-    }
-  }, [id]);
-
-  if (!pokemon) {
-    return null;
-  }
-
+export default function Details({
+  pokemon,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div>
       <Head>

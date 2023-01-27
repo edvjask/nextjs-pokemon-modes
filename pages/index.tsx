@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { Inter } from '@next/font/google';
 import styles from '@/styles/Home.module.css';
 import Link from 'next/link';
+import { InferGetServerSidePropsType } from 'next';
 
 interface Pokemon {
   id: number;
@@ -11,19 +12,19 @@ interface Pokemon {
   image: string;
 }
 
-export default function Home() {
-  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+export async function getServerSideProps() {
+  const resp = await fetch(`https://edvinas-buck.s3.amazonaws.com/index.json`);
 
-  useEffect(() => {
-    async function getPokemon() {
-      const resp = await fetch(
-        'https://edvinas-buck.s3.amazonaws.com/index.json'
-      );
-      setPokemon(await resp.json());
-    }
-    getPokemon();
-  }, []);
+  return {
+    props: {
+      pokemon: (await resp.json()) as Pokemon[],
+    },
+  };
+}
 
+export default function Home({
+  pokemon,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div className={styles.container}>
       <Head>
