@@ -49,7 +49,7 @@ export async function getStaticProps({ params }: GetServerSidePropsContext) {
     props: {
       pokemon: (await resp.json()) as Pokemon,
     },
-    revalidate: 30,
+    // revalidate: 30,
   };
 }
 
