@@ -1,7 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import {
+  GetServerSidePropsContext,
+  GetStaticPathsContext,
+  GetStaticProps,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { ParsedUrlQuery } from 'querystring';
 import React from 'react';
 import styles from '../../styles/Details.module.css';
 
@@ -16,6 +22,10 @@ interface PokemonGeneral {
   id: number;
   name: string;
   image: string;
+}
+
+interface IParams extends ParsedUrlQuery {
+  id: string;
 }
 
 export async function getStaticPaths() {
@@ -44,7 +54,7 @@ export async function getStaticProps({ params }: GetServerSidePropsContext) {
 
 export default function Details({
   pokemon,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getStaticProps>) {
   return (
     <div>
       <Head>
